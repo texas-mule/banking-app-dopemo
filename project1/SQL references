@@ -1,0 +1,127 @@
+		Connection c = null;
+	      try {
+	         Class.forName("org.postgresql.Driver");
+	         c = DriverManager
+	            .getConnection("jdbc:postgresql://localhost:5432/postgres",
+	            "postgres", "password");
+	      } catch (Exception e) {
+	         e.printStackTrace();
+	         System.err.println(e.getClass().getName()+": "+e.getMessage());
+	         System.exit(0);
+	      }
+	      System.out.println("Opened database successfully");
+	   }
+	public void createTable() {
+		   Connection c = null;
+		      Statement stmt = null;
+		      try {
+		         Class.forName("org.postgresql.Driver");
+		         c = DriverManager
+		            .getConnection("jdbc:postgresql://localhost:5432/postgres",
+		            "postgres", "passsword");
+		         System.out.println("Opened database successfully");
+
+		         stmt = c.createStatement();
+		         String sql = "CREATE TABLE App " +
+		        		 "(ID  SERIAL PRIMARY KEY," +
+		                 " FIRSTNAME           TEXT    NOT NULL, " +
+		                 " LastName            TEXT    NOT NULL, " +
+		                 " Username             TEXT    NOT NULL, " +
+		                 " Password             TEXT    NOT NULL, " +
+		                 " c_score              TEXT    NOT NULL)";
+		         stmt.executeUpdate(sql);
+		         stmt.close();
+		         c.close();
+		      } catch ( Exception e ) {
+		         System.err.println( e.getClass().getName()+": "+ e.getMessage() );
+		         System.exit(0);
+		      }
+		      System.out.println(" USER Table created successfully");
+		   }
+		public void addToTable(Applications app) {
+			
+			 Connection c = null;
+		    PreparedStatement stmt = null;
+		    try {
+		         Class.forName("org.postgresql.Driver");
+		         c = DriverManager
+		        		 .getConnection("jdbc:postgresql://localhost:5432/postgres",
+		        		            "postgres", "password");
+		         
+		         System.out.println("Opened database successfully add to table");
+		         String sql = "INSERT INTO app (firstname, lastname, username, password, c_score) VALUES (?,?,?,?,?)";
+
+				
+					stmt = c.prepareStatement(sql);
+					
+					stmt.setString(1, app.getFirstname());
+					stmt.setString(2, app.getLastname());
+
+					stmt.setString(3, app.getUsername());
+					stmt.setString(4, app.getPassword());
+					String temp=Integer.toString(app.getC_score());
+					stmt.setString(5, temp);
+					
+					success = stmt.executeUpdate();
+				
+					
+					
+					System.out.println(success);
+					
+		         System.out.println("Applicant Successfully Added!");
+		        
+		    } catch (Exception e) {
+		         System.err.println( e.getClass().getName()+": "+ e.getMessage() );
+		         System.exit(0);
+		      }
+		    if (success == 0) {
+				// then update didn't occur, throw an exception
+				try {
+					throw new Exception("Insert animal failed: ");
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+	            
+			
+			
+		}
+		public void viewTable() {
+			Connection c = null;
+		      Statement stmt = null;
+			 try {
+		         Class.forName("org.postgresql.Driver");
+		         c = DriverManager
+		            .getConnection("jdbc:postgresql://localhost:5432/postgres",
+		            "postgres", "password");
+		         c.setAutoCommit(false);
+		         System.out.println("Opened database successfully");
+
+		         stmt = c.createStatement();
+		         ResultSet rs = stmt.executeQuery( "SELECT * FROM App;" );
+		         while ( rs.next() ) {
+		             int id = rs.getInt("id");
+		            String  firstname = rs.getString("FIRSTNAME");
+		             String  lastname  = rs.getString("LastName");
+		             String  username= rs.getString("Username");
+		             String  password = rs.getString("Password");
+		             String  credit_score = rs.getString("c_score");
+		             System.out.println( "ID = " + id );
+		             System.out.println( "NAME = " + firstname );
+		             System.out.println( "AGE = " + lastname );
+		             System.out.println( "ADDRESS = " + username );
+		             System.out.println( "SALARY = " + password);
+		             System.out.println("Credit Score"+credit_score);
+		             System.out.println();
+		          }
+		          rs.close();
+		          stmt.close();
+		          c.close();
+			 } catch ( Exception e ) {
+		         System.err.println( e.getClass().getName()+": "+ e.getMessage() );
+		         System.exit(0);
+		      }
+			
+		}
