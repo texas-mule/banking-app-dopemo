@@ -1,7 +1,7 @@
 package com.reveture.mohamad;
 import java.util.ArrayList;
 
-public class Admin {
+public class Admin implements EmployeeImpDb {
 	private String userName;
 	private String password;
 	ArrayList<Customer> customers= new ArrayList<Customer>();

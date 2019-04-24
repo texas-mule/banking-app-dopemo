@@ -15,8 +15,9 @@ public class CustomerImp implements PostgreImp{
 
 			ResultSet rs = stmt.executeQuery( "SELECT * FROM \"Apps\";" );
 	         while ( rs.next() ) {
-	             int id = rs.getInt("Id");
+	             
 	             Applications app= new Applications();
+	             app.setId(rs.getInt("Id"));
 	             app.setFirstname(rs.getString("firstname"));
 	             app.setLastname(rs.getString("lastname"));
 	             app.setUsername(rs.getString("username"));
@@ -83,6 +84,26 @@ public class CustomerImp implements PostgreImp{
 			throw new Exception("Insert Customer failed: ");
 		}
 
+	}
+	public void deleteApp(Applications app) {
+		Connection connection=null;
+		PreparedStatement pstmt = null;
+		String sql="DELETE FROM \"Apps\" WHERE \"Id\" = ?";
+		int affectedrows = 0;
+		 
+        try {
+        	connection = Postgres.getConnection();
+        	pstmt = connection.prepareStatement(sql);
+ 
+            pstmt.setInt(1, app.getId());
+ 
+            affectedrows = pstmt.executeUpdate();
+ 
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+		
+		
 	}
 
 

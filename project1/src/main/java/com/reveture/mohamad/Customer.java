@@ -9,6 +9,13 @@ public  class Customer {
 	private double s_balance;
 	private int a_number;
 	private boolean approved;
+	private int employeid;
+	public int getEmployeid() {
+		return employeid;
+	}
+	public void setEmployeid(int employeid) {
+		this.employeid = employeid;
+	}
 	public Customer(String firstName, String lastName, String userName, String password, double c_balance,
 			double s_balance, int a_number) {
 		super();
@@ -19,6 +26,7 @@ public  class Customer {
 		this.c_balance = c_balance;
 		this.s_balance = s_balance;
 		this.a_number = a_number;
+		
 		this.approved=false;
 	}
 	public Customer(){
@@ -94,6 +102,7 @@ public  class Customer {
 	public void saveCustomer(Customer customer) {
 		
 	}
+	
 	
 	
 	

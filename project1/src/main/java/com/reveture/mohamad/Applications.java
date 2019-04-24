@@ -1,7 +1,11 @@
 package com.reveture.mohamad;
 
-public class Applications {
+import java.util.ArrayList;
+import java.util.List;
 
+public class Applications {
+	private int id;
+	
 	private String firstname;
 	private String lastname;
 	private String username;
@@ -13,9 +17,17 @@ public class Applications {
 		this.username = username;
 		this.password = password;
 		this.c_score = c_score;
+		
 	}
+	
 	public Applications() {
 		// TODO Auto-generated constructor stub
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
 	}
 	public String getFirstname() {
 		return firstname;
@@ -47,10 +59,13 @@ public class Applications {
 	public void setC_score(int c_score) {
 		this.c_score = c_score;
 	}
+
 	@Override
 	public String toString() {
-		return "Applications [firstname=" + firstname + ", lastname=" + lastname + ", username=" + username
-				+ ", password=" + password + ", c_score=" + c_score + "]\n";
+		return "Applications [id=" + id + " firstname=" + firstname + " lastname=" + lastname + " username="
+				+ username + " password=" + password + " c_score=" + c_score + "]\n";
 	}
+	
+	
 	
 }
