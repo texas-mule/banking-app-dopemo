@@ -8,8 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomersImp implements CustomersInterface{
-	public List<Customer> getAllCustomer() {
+public class CancelInterface implements Cinterface{
+	public List<Customer> getAllCAccounts() {
 		List<Customer> customers = new ArrayList<>();
 		Connection connection = null;
 		Statement stmt = null;
@@ -19,17 +19,13 @@ public class CustomersImp implements CustomersInterface{
 
 			stmt = connection.createStatement();
 
-			ResultSet rs = stmt.executeQuery( "SELECT * FROM \"Customer\";" );
+			ResultSet rs = stmt.executeQuery( "SELECT * FROM \"Cancelled\";" );
 	         while ( rs.next() ) {
 	             int id = rs.getInt("Id");
 	             Customer customer=new Customer();
 	             customer.setFirstName(rs.getString("firstname"));
 	             customer.setLastName(rs.getString("lastname"));
 	             customer.setUserName(rs.getString("username"));
-	             customer.setPassword(rs.getString("Password"));
-	             customer.setC_balance(rs.getDouble("checkbalance"));
-	             customer.setS_balance(rs.getDouble("savebalance"));
-	             customer.setEmployeid(rs.getInt("employeid"));
 	             customer.setA_number(rs.getInt("accountnumber"));
 	             customers.add(customer);
 	             
@@ -53,14 +49,17 @@ public class CustomersImp implements CustomersInterface{
 
 		return customers;
 	}
-	public void saveApplication(Customer cust) {
+
+
+	
+	public void saveCAccount(Customer cust) throws Exception {
 		Connection connection = null;
 		PreparedStatement stmt = null;
 		int success = 0;
 
 		try {
 			connection = Postgres.getConnection();
-			String sql = "INSERT INTO \"Customer\" (firstname, lastname, username, password, checkbalance, savebalance,employeid,accountnumber) VALUES (?,?,?,?,?,?,?,?)";
+			String sql = "INSERT INTO \"Cancelled\" (id, firstname, lastname, username,accountnumber) VALUES (1,?,?,?,?)";
 
 			
 			stmt = connection.prepareStatement(sql);
@@ -69,11 +68,7 @@ public class CustomersImp implements CustomersInterface{
 			stmt.setString(2, cust.getLastName());
 
 			stmt.setString(3, cust.getUserName());
-			stmt.setString(4, cust.getPassword());
-			stmt.setDouble(5, cust.getC_balance());
-			stmt.setDouble(6, cust.getS_balance());
-			stmt.setInt(7, cust.getEmployeid());
-			stmt.setInt(8,cust.getA_number());
+			stmt.setInt(4,cust.getA_number());
 			
 			success = stmt.executeUpdate();
 		} catch (SQLException e) {
@@ -98,29 +93,8 @@ public class CustomersImp implements CustomersInterface{
 				e.printStackTrace();
 			}
 		}
+		// TODO Auto-generated method stub
 		
 	}
-
-
-	public void deleteCustomer(Customer customer) {
-		Connection connection=null;
-		PreparedStatement pstmt = null;
-		String sql="DELETE FROM \"Customer\" WHERE accountnumber = ?";
-		int affectedrows = 0;
-		 
-        try {
-        	connection = Postgres.getConnection();
-        	pstmt = connection.prepareStatement(sql);
- 
-            pstmt.setInt(1, customer.getA_number());
- 
-            affectedrows = pstmt.executeUpdate();
- 
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
-		
-		
-	}	
 
 }

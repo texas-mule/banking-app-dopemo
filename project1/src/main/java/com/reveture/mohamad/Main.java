@@ -44,7 +44,7 @@ public class Main {
 
 				boolean in_userMenu=true;
 				int temp1=addApplication(app);
-				if(temp1!=1) {
+				if(temp1==1) {
 				while(in_userMenu) {
 					int new_user=newUserMenu();
 					
@@ -74,11 +74,19 @@ public class Main {
 					welcomeMessage("Welcome "+employee.getFirstname());
 					System.out.println("What would like to do today?");
 					System.out.println("1.See your customers");
-					System.out.println("2.Approve/Deny Applications");
+					System.out.println("2.Approve Applications");
 					System.out.println("3.Cancell Accounts");
 					System.out.println("4.Exit Portal");
 					Scanner scanner=new Scanner(System.in);
-					int temp=scanner.nextInt();
+					int temp=0;
+							while(temp==0) {
+								try{
+									temp=scanner.nextInt();
+									}catch(Exception e) {
+										System.out.print("Wrong input");
+										scanner.next();
+									}
+								}
 					if(temp==4) {
 						random=false;
 					}
@@ -88,33 +96,63 @@ public class Main {
 						CustomerImp customer=new CustomerImp();
 						appps=customer.getAllApplications();
 						System.out.println(appps.toString());
-						System.out.print("which applicant would like to except");
+						System.out.print("Please Enter Id of applicant you would like to except: ");
+						System.out.println("1.Exit");
+						
 						Scanner ssc=new Scanner(System.in);
-						int ip=ssc.nextInt();
+						int ip=0;
+						while(ip==0)
+						{
+							try {
+								ip=ssc.nextInt();
+							}catch(Exception e) {
+								System.out.println("Oops it looks like this account does not exist!");
+								ssc.next();
+							}
+						}
 						Applications application=new Applications();
 						boolean exists=false;
 						for(Applications ap : appps) {
 							if(ap.getId()==ip) {
 								exists=true;
 								application=ap;
-								System.out.println("User already exists");
+								
 								
 								
 							}
 						}
 						if(exists==true) {
 						try {
+							
 							CustomersImp customersImp=new CustomersImp();
 							Customer customa=new Customer();
-							System.out.println("Please give customer an account number");
+							List<Customer> cuz=new ArrayList<>();
+							cuz=customersImp.getAllCustomer();
+							
+							boolean t_flag=false;
 							int a_number=0;
-							while(a_number==0) {
+							int contoller=0;
+							while(contoller==0) {
+								System.out.println("Please give customer an account number");
 							try {
 							 a_number=ssc.nextInt();
 							}catch(Exception e){
 								System.out.print("Wrong input");
 							}
+							
+							for(Customer c:cuz) {
+								if(a_number==c.getA_number()) {
+									System.out.println("Sorry Account number already in use!");
+									t_flag=true;
+									break;
+								}
+							  }
+							if(t_flag==false) {
+								contoller=1;
+								System.out.println("User has been added!");
+								break;
 							}
+						}
 							customa.setA_number(a_number);
 							customa.setFirstName(application.getFirstname());
 							customa.setLastName(application.getLastname());
@@ -127,6 +165,9 @@ public class Main {
 							customa.setA_number(a_number);
 							customersImp.saveApplication(customa);
 							customerImp.deleteApp(application);
+							RejectedApps rejectedapps=new RejectedApps();
+							rejectedapps.saveApplication(application);
+							
 							
 						}
 						 catch (Exception e) {
@@ -135,7 +176,7 @@ public class Main {
 						}
 					}
 						else if(exists==false) {
-							System.out.println("Start over!\nUser Already exists\n");
+							System.out.println("Application does not exists!");
 							
 						}
 						
@@ -143,6 +184,81 @@ public class Main {
 						
 						
 						
+					}
+					else if(temp==1) {
+						
+						CustomersImp customersImps=new CustomersImp();
+						
+						List<Customer> couts = new ArrayList<>();
+						
+						couts = customersImps.getAllCustomer();
+					
+						
+						for(Customer cout: couts) {
+							if(cout.getEmployeid()==employee.getEmployeeid()){
+								
+								System.out.println(cout.toString());
+								
+								
+								
+							}
+						}
+						
+						
+						
+						
+						
+					}
+					else if(temp==3) {
+						
+						
+						CustomersImp customersImps=new CustomersImp();
+						
+						List<Customer> couts = new ArrayList<>();
+						
+						couts = customersImps.getAllCustomer();
+					
+						
+						for(Customer cout: couts) {
+							if(cout.getEmployeid()==employee.getEmployeeid()){
+								
+								System.out.println(cout.toString());
+								
+								
+								
+							}
+							
+							}
+						System.out.println("\n\nPlease enter the account number: ");
+						
+						Scanner cancell=new Scanner(System.in);
+						int cacl=0;
+						while(cacl==0){
+							try {
+								cacl=cancell.nextInt();
+							}catch(Exception e) {
+								System.out.println("Wrong Input!");
+								cancell.next();
+							}
+							
+						for(Customer cou: couts) {
+							if(cou.getA_number()==cacl) {
+								System.out.println("You are deleting "+cou.getFirstName());
+								CancelInterface cancelInterface=new CancelInterface();
+								try {
+									cancelInterface.saveCAccount(cou);
+									customersImps.deleteCustomer(cou);
+								} catch (Exception e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								
+							}
+							
+						}
+						
+						
+						}
 					}
 					
 				}
@@ -161,9 +277,10 @@ public class Main {
 
 	public static int menu() {
 		
-		int selection;
+		int selection=0;
 		
         Scanner input = new Scanner(System.in);
+       
         
         System.out.println("Welcome to our Bank!");
 		
@@ -174,8 +291,24 @@ public class Main {
 		System.out.println("3.Customer Login");
 		System.out.println("4.Admin Login");
 		
-		
-        selection = input.nextInt();
+		while(selection==0) {
+			try {
+        
+			
+        	if(selection<=0||selection>4) 
+        	{
+        	
+        	selection=0;
+        }
+        	selection = input.nextInt();
+        
+			}catch(Exception e) {
+				input.next();
+				System.out.println("Sorry wrong input");
+				
+			}
+			
+		}
         return selection;  
 	}
 public static String RegisterMenu() {
@@ -195,6 +328,7 @@ public static String RegisterMenu() {
            firstname=input.nextLine();
        	}catch(Exception e){
        		System.out.println("Wrong Input");
+       		input.next();
        	}
           }
        System.out.println("lastname: ");
@@ -203,6 +337,7 @@ public static String RegisterMenu() {
            lastname=input.nextLine();
        	}catch(Exception e){
        		System.out.println("Wrong Input");
+       		input.next();
        	}
           }
        System.out.println("Username: ");
@@ -253,7 +388,7 @@ public static int newUserMenu() {
 public static int addApplication(Applications app){
 	List<Applications>apps=new ArrayList<>();
 	
-	boolean exists=true;
+	boolean exists=false;
 	
 	CustomerImp customerImp=new CustomerImp();
 	
@@ -266,6 +401,8 @@ public static int addApplication(Applications app){
 			System.out.println("User already exists");
 			return 1;
 		}
+		
+		
 	}
 	if(exists==false) {
 	try {
@@ -330,6 +467,14 @@ public static Employee EmpLogginMenu() {
 }
 public static void welcomeMessage(String message) {
 	System.out.println(message);
+}
+public static void employeeMenu(Employee employee) {
+	welcomeMessage("Welcome "+employee.getFirstname());
+	System.out.println("What would like to do today?");
+	System.out.println("1.See your customers");
+	System.out.println("2.Approve Applications");
+	System.out.println("3.Cancell Accounts");
+	System.out.println("4.Exit Portal");
 }
 
 }

@@ -35,7 +35,7 @@ public class Postgres {
 		
 		//If connection was closed then retrieve a new connection
 		if (connection.isClosed()){
-			System.out.println("getting new connection...");
+			
 			connection = DriverManager.getConnection(URL, CONNECTION_USERNAME, CONNECTION_PASSWORD);
 		}
 		return connection;
