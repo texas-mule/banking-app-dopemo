@@ -98,6 +98,12 @@ public class CustomersImp implements CustomersInterface{
 				e.printStackTrace();
 			}
 		}
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 
@@ -119,8 +125,163 @@ public class CustomersImp implements CustomersInterface{
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
+        try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		
-	}	
+	}
+	public void depositChecking(double amount,Customer customer) {
+		Connection connection=null;
+		PreparedStatement pstmt = null;
+		String sql="UPDATE \"Customer\" SET checkbalance = ? WHERE accountnumber=?";
+		int affectedrows = 0;
+		 
+        try {
+        	connection = Postgres.getConnection();
+        	pstmt = connection.prepareStatement(sql);
+ 
+            pstmt.setDouble(1, customer.getC_balance()+amount);
+            pstmt.setInt(2, customer.getA_number());
+ 
+            affectedrows = pstmt.executeUpdate();
+ 
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+	}
+	public void depositSavings(double amount,Customer customer) {
+		Connection connection=null;
+		PreparedStatement pstmt = null;
+		String sql="UPDATE \"Customer\" SET savebalance = ? WHERE accountnumber=?";
+		int affectedrows = 0;
+		 
+        try {
+        	connection = Postgres.getConnection();
+        	pstmt = connection.prepareStatement(sql);
+ 
+            pstmt.setDouble(1, customer.getS_balance()+amount);
+            pstmt.setInt(2, customer.getA_number());
+ 
+            affectedrows = pstmt.executeUpdate();
+ 
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+	public void widthrawlChecking(double amount,Customer customer){
+		Connection connection=null;
+		if(amount<customer.getC_balance()) {
+		
+		PreparedStatement pstmt = null;
+		String sql="UPDATE \"Customer\" SET checkbalance = ? WHERE accountnumber=?";
+		int affectedrows = 0;
+		 
+        try {
+        	connection = Postgres.getConnection();
+        	pstmt = connection.prepareStatement(sql);
+ 
+            pstmt.setDouble(1, customer.getC_balance()-amount);
+            pstmt.setInt(2, customer.getA_number());
+ 
+            affectedrows = pstmt.executeUpdate();
+ 
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+		}
+		else {
+			System.out.println("You have insufficient funds!");
+		}
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+	}
+	public void widthrawlSavings(double amount,Customer customer){
+		Connection connection=null;
+		if(amount<customer.getS_balance()) {
+		
+		PreparedStatement pstmt = null;
+		String sql="UPDATE \"Customer\" SET savebalance = ? WHERE accountnumber=?";
+		int affectedrows = 0;
+		 
+        try {
+        	connection = Postgres.getConnection();
+        	pstmt = connection.prepareStatement(sql);
+ 
+            pstmt.setDouble(1, customer.getS_balance()-amount);
+            pstmt.setInt(2, customer.getA_number());
+ 
+            affectedrows = pstmt.executeUpdate();
+ 
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+		}
+		else {
+			System.out.println("You have insufficient funds!");
+		}
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
+	public void transferD(double amount,Customer customer, Customer customer2){
+			if(customer.getC_balance()>amount) {
+				CustomersImp c=new CustomersImp();
+				c.widthrawlChecking(amount, customer2);
+				c.depositChecking(amount, customer2);
+			}
+			else {
+				System.out.println("Sorry you have insufficient to make transfer");
+				return;
+			}
+		
+		
+	}
+	public void transferS(double amount,Customer customer, Customer customer2){
+		if(customer.getS_balance()>amount) {
+			CustomersImp c=new CustomersImp();
+			c.widthrawlSavings(amount, customer2);
+			c.depositChecking(amount, customer2);
+		}
+		else {
+			System.out.println("Sorry you have insufficient to make transfer");
+			return;
+		}
+	
+	
+}
 
 }

@@ -21,9 +21,9 @@ public class Main {
 		
 		
 		boolean flag=true;
-		
+		Applications dude=new Applications();
 		while(flag==true) {
-		
+		System.out.println(dude.isApplied());
 			int input=menu();
 			if(input==1) {
 				String appInfo=RegisterMenu();
@@ -39,26 +39,83 @@ public class Main {
 				app.setUsername(temp[2]);
 				app.setPassword(temp[3]);
 				app.setC_score(Integer.parseInt(temp[4]));
+				app.setApplied(false);
 				
 				
 
 				boolean in_userMenu=true;
 				int temp1=addApplication(app);
-				if(temp1==1) {
-				while(in_userMenu) {
-					int new_user=newUserMenu();
-					
-					if(new_user==1) {
-						System.out.println("Application was sent and Pending approval");
-						in_userMenu=false;
-					}
-					if(new_user==2) {
-						in_userMenu=false;
-					}
-				}
+				if(temp1!=1) {
+					System.out.println("Sorry User Already exists!");
 				
 				}
+				else {
+					while(in_userMenu) {
+					int so=newUserMenu(app);
+					if(so==1) {
+						CustomerImp cst=new CustomerImp();
+						cst.apply(app);
+						System.out.println("Application has been sent!");
+						in_userMenu=false;
+					}
+					else if(so==2) {
+						in_userMenu=false;
+					}
+					}
+				}
 			}
+			
+			else if(input==5) {
+				CustomerImp last=new CustomerImp();
+				List<Applications> apps=new ArrayList<>();
+				Applications user=userlogMenu();
+				if(user!=null)
+				{
+					boolean in_userMnu=true;
+					
+					while(in_userMnu) {
+						System.out.println("Welcome "+ user.getUsername());
+						System.out.println("1.Apply for Account");
+					    System.out.println("2.Back to Main Menu");
+					    System.out.println("3.Check Application Status");
+						
+						Scanner opt=new Scanner(System.in);
+						int t_opt=0;
+						while(t_opt==0)
+						{
+							try {
+							t_opt=opt.nextInt();
+							}catch(Exception e){
+								opt.next();
+							}
+						}
+						if(t_opt==2){
+							in_userMnu=false;
+							
+						}
+						if(t_opt==1) 
+						{
+							if(user.isApplied()){
+								System.out.println("Your Application has already been sent!");
+								//in_userMnu=false;
+							}
+							else {
+								last.apply(user);
+								System.out.println("Application has been sent!");
+								//in_userMnu=false;
+							}
+							
+							
+						}
+					}
+					
+					
+				}
+				else {
+					System.out.println("Sorry user Does not exist!");
+				}
+			}
+
 			else if(input==2) {
 				boolean random=false;
 				Employee employee=new Employee();
@@ -95,15 +152,24 @@ public class Main {
 						List<Applications> appps=new ArrayList<>();
 						CustomerImp customer=new CustomerImp();
 						appps=customer.getAllApplications();
-						System.out.println(appps.toString());
-						System.out.print("Please Enter Id of applicant you would like to except: ");
+						List<Applications> a_apps=new ArrayList<>();
+						for(Applications p:appps)
+						{
+							if(p.isApplied()==true){
+								a_apps.add(p);
+								
+							}
+							
+						}
+						System.out.println(a_apps.toString());
+						System.out.print("Please Enter Id of applicant you would like to except or Press 1 to exit: ");
 						System.out.println("1.Exit");
 						
 						Scanner ssc=new Scanner(System.in);
 						int ip=0;
 						while(ip==0)
 						{
-							try {
+							try{
 								ip=ssc.nextInt();
 							}catch(Exception e) {
 								System.out.println("Oops it looks like this account does not exist!");
@@ -223,13 +289,11 @@ public class Main {
 							if(cout.getEmployeid()==employee.getEmployeeid()){
 								
 								System.out.println(cout.toString());
-								
-								
-								
 							}
 							
 							}
-						System.out.println("\n\nPlease enter the account number: ");
+						System.out.println("\n\nPlease enter the account number: or 0 to exit");
+						
 						
 						Scanner cancell=new Scanner(System.in);
 						int cacl=0;
@@ -239,6 +303,9 @@ public class Main {
 							}catch(Exception e) {
 								System.out.println("Wrong Input!");
 								cancell.next();
+							}
+							if(cacl==0) {
+								break;
 							}
 							
 						for(Customer cou: couts) {
@@ -264,9 +331,127 @@ public class Main {
 				}
 				
 			}
+			else if(input==3){
+				boolean pls=true;
+				Customer log=userLogin();
+				if(log==null) {
+					System.out.println("Sorry user does not exist");
+				}
+				else {
+				while(pls) {
+				
+				CustomersImp cuz=new CustomersImp(); 
+				System.out.println("Hello! "+log.getUserName());
+				System.out.println("0.To Exit");
+				System.out.println("1.Check checking Balance");
+				System.out.println("2.Check savings Balance");
+				System.out.println("3.Deposit into Checking");
+				System.out.println("4.Deposit into Savings");
+				System.out.println("5.Checking withdrawl");
+				System.out.println("6.Savings withdrawl");
+				System.out.println("7.Transfer");
+				
+				
+					
+//					System.out.println("Hello "+log.getUserName());
+//					System.out.println("1.Check checking Balance");
+//					System.out.println("2.Check savings Balance");
+//					System.out.println("3.Withdrawl money");
+//					System.out.println("4.Deposit");
+//					System.out.println("5.Transfers");
+					Scanner c_choice=new Scanner(System.in);
+					int cc_choice=-111;
+					while(cc_choice==-111){
+						try {
+						cc_choice=c_choice.nextInt();
+						if(cc_choice<0||cc_choice>7){
+							cc_choice=-111;
+							System.out.println("Input not valid");
+						}
+						
+					}catch(Exception e){
+						System.out.println("Wrong Input!");
+						c_choice.next();
+						
+					
+					}
+						
+					}
+				if(cc_choice==1){
+					
+					System.out.println("Your checking account balance: "+log.getC_balance());
+				}
+				else if(cc_choice==0){
+					break;
+				}
+				else if(cc_choice==3){
+					System.out.println("How much would like to deposit?");
+					double amount=0;
+					while(amount==0) {
+						try {
+					amount=c_choice.nextDouble();
+					if(amount<0){
+						System.out.println("invalid operation!");
+						amount=0;
+					}
+						}catch(Exception e){
+							c_choice.next();
+							System.out.println("invalid operation!");
+							
+						}
+					}
+					cuz.depositChecking(amount, log);
+					log.setC_balance(log.getC_balance()+amount);
+					System.out.println("Here is your new balance: "+log.getC_balance());
+					
+					
+				}
+				else if(cc_choice==2){
+					System.out.println("Your savings account balance: "+log.getS_balance());
+				}
+				else if(cc_choice==7) {
+					System.out.println("Would you like to transfer from your checking or savings account?");
+					
+				}
+				else if(cc_choice==5){
+					System.out.println("How much would like to withdrawl?: ");
+					double amount=0;
+					while(amount==0) {
+						try {
+					amount=c_choice.nextDouble();
+					if(amount<0){
+						System.out.println("invalid operation!");
+						amount=0;
+					}
+						}catch(Exception e){
+							c_choice.next();
+							System.out.println("invalid operation!");
+							
+						}
+					}
+					cuz.widthrawlChecking(amount, log);
+					if(amount>log.getC_balance()) {
+						System.out.println("insufficient funds for withdrawl");
+					}
+					else {
+					log.setC_balance(log.getC_balance()-amount);
+					System.out.println("Here is your new balance: "+log.getC_balance());
+					}
+					
+				}
+					
+					
+					
+				}
+				}
+				//System.out.println("Sorry User does not exist");
+			}
+				
+}
+
 			
 			
-			}	
+			
 			
 			
 		System.out.println("Have a good day!");
@@ -290,12 +475,13 @@ public class Main {
 		System.out.println("2.Employee Login");
 		System.out.println("3.Customer Login");
 		System.out.println("4.Admin Login");
+		System.out.println("5.User Login");
 		
 		while(selection==0) {
 			try {
         
 			
-        	if(selection<=0||selection>4) 
+        	if(selection<=0||selection>5) 
         	{
         	
         	selection=0;
@@ -311,6 +497,8 @@ public class Main {
 		}
         return selection;  
 	}
+	
+	
 public static String RegisterMenu() {
 		String firstname=null;
 		String lastname=null;
@@ -373,10 +561,10 @@ public static String RegisterMenu() {
         
         return firstname+" "+lastname+" "+username+" "+password+" "+Integer.toString(credit_score);  
 	}
-public static int newUserMenu() {
+public static int newUserMenu(Applications app) {
 	
 	int selection;
-	
+	System.out.println("Welcome "+app.getUsername());
     Scanner input = new Scanner(System.in);
     System.out.println("1.Apply for Account");
     System.out.println("2.Back to Main Menu");
@@ -398,7 +586,6 @@ public static int addApplication(Applications app){
 	for(Applications ap : apps) {
 		if(ap.getUsername().equals(app.getUsername())) {
 			exists=true;
-			System.out.println("User already exists");
 			return 1;
 		}
 		
@@ -468,13 +655,89 @@ public static Employee EmpLogginMenu() {
 public static void welcomeMessage(String message) {
 	System.out.println(message);
 }
-public static void employeeMenu(Employee employee) {
-	welcomeMessage("Welcome "+employee.getFirstname());
-	System.out.println("What would like to do today?");
-	System.out.println("1.See your customers");
-	System.out.println("2.Approve Applications");
-	System.out.println("3.Cancell Accounts");
-	System.out.println("4.Exit Portal");
+public static Customer userLogin() {
+	
+	Scanner sc=new Scanner(System.in);
+	String username=null;
+	String password=null;
+	boolean flag=true;
+	System.out.println("Please Enter Username: ");
+	while(username==null){
+		try{
+			username=sc.nextLine();
+		}catch(Exception e){
+			System.out.println("Wrong input!");
+			sc.next();
+		}
+	}
+	
+	System.out.println("Please Enter Password:  ");
+	while(password==null) {
+		try {
+			password=sc.nextLine();
+		}catch(Exception e) {
+			System.out.println("Wrong input!");
+			sc.next();
+			
+		}
+	}
+	CustomersImp customerImp=new CustomersImp();
+	List<Customer> customers=new ArrayList<>();
+	customers=customerImp.getAllCustomer();
+	Customer cust=new Customer();
+	for(Customer c: customers) {
+		if(c.getUserName().equals(username)) {
+			if(c.getPassword().equals(password)){
+				cust=c;
+				return cust;
+				
+			}
+		}
+	}
+	return null;
+	
+}
+static Applications userlogMenu() {
+	
+	
+	Scanner sc=new Scanner(System.in);
+	String username=null;
+	String password=null;
+	boolean flag=true;
+	System.out.println("Please Enter Username: ");
+	while(username==null){
+		try{
+			username=sc.nextLine();
+		}catch(Exception e){
+			System.out.println("Wrong input!");
+			sc.next();
+		}
+	}
+	
+	System.out.println("Please Enter Password:  ");
+	while(password==null) {
+		try {
+			password=sc.nextLine();
+		}catch(Exception e) {
+			System.out.println("Wrong input!");
+			sc.next();
+			
+		}
+	}
+	CustomerImp customerImp=new CustomerImp();
+	List<Applications> customers=new ArrayList<>();
+	customers=customerImp.getAllApplications();
+	Applications cust=new Applications();
+	for(Applications c: customers) {
+		if(c.getUsername().equals(username)) {
+			if(c.getPassword().equals(password)){
+				cust=c;
+				return cust;
+				
+			}
+		}
+	}
+	return null;
 }
 
 }

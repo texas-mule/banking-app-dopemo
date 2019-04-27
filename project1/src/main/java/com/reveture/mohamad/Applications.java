@@ -11,15 +11,25 @@ public class Applications {
 	private String username;
 	private String password;
 	private int c_score;
+	private boolean applied;
 	public Applications(String firstname, String lastname, String username, String password, int c_score) {
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.username = username;
 		this.password = password;
 		this.c_score = c_score;
+		this.applied=false;
 		
 	}
 	
+	public boolean isApplied() {
+		return applied;
+	}
+
+	public void setApplied(boolean applied) {
+		this.applied = applied;
+	}
+
 	public Applications() {
 		// TODO Auto-generated constructor stub
 	}

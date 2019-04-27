@@ -23,6 +23,7 @@ public class CustomerImp implements PostgreImp{
 	             app.setUsername(rs.getString("username"));
 	             app.setPassword(rs.getString("Password"));
 	             app.setC_score(rs.getInt("creditscore"));
+	             app.setApplied(rs.getBoolean("applied"));
 	             apps.add(app);
 	             
 	            
@@ -42,7 +43,12 @@ public class CustomerImp implements PostgreImp{
 				e.printStackTrace();
 			}
 		}
-
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return apps;
 	}
 
@@ -53,7 +59,7 @@ public class CustomerImp implements PostgreImp{
 
 		try {
 			connection = Postgres.getConnection();
-			String sql = "INSERT INTO \"Apps\" (firstname, lastname, username, password, creditscore) VALUES (?,?,?,?,?)";
+			String sql = "INSERT INTO \"Apps\" (firstname, lastname, username, password, creditscore, applied) VALUES (?,?,?,?,?,?)";
 
 			
 			stmt = connection.prepareStatement(sql);
@@ -64,6 +70,7 @@ public class CustomerImp implements PostgreImp{
 			stmt.setString(3, app.getUsername());
 			stmt.setString(4, app.getPassword());
 			stmt.setInt(5, app.getC_score());
+			stmt.setBoolean(6, app.isApplied());
 			
 			success = stmt.executeUpdate();
 		} catch (SQLException e) {
@@ -83,6 +90,12 @@ public class CustomerImp implements PostgreImp{
 			// then update didn't occur, throw an exception
 			throw new Exception("Insert Customer failed: ");
 		}
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 	public void deleteApp(Applications app) {
@@ -96,6 +109,34 @@ public class CustomerImp implements PostgreImp{
         	pstmt = connection.prepareStatement(sql);
  
             pstmt.setInt(1, app.getId());
+            
+ 
+            affectedrows = pstmt.executeUpdate();
+ 
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	public void apply(Applications app) {
+		
+		Connection connection=null;
+		PreparedStatement pstmt = null;
+		String sql="UPDATE \"Apps\" SET applied = ? WHERE username = ?";
+		int affectedrows = 0;
+		app.setApplied(true);
+		 
+        try {
+        	connection = Postgres.getConnection();
+        	pstmt = connection.prepareStatement(sql);
+        	pstmt.setBoolean(1,app.isApplied());
+            pstmt.setString(2, app.getUsername());
  
             affectedrows = pstmt.executeUpdate();
  
@@ -103,7 +144,12 @@ public class CustomerImp implements PostgreImp{
             System.out.println(ex.getMessage());
         }
 		
-		
+        try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 
