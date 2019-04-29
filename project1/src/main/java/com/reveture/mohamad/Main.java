@@ -64,7 +64,10 @@ public class Main {
 					}
 				}
 			}
-			
+			else if(input==4) {
+				Admin min=new Admin();
+				min.AdminLogin();
+			}
 			else if(input==5) {
 				CustomerImp last=new CustomerImp();
 				List<Applications> apps=new ArrayList<>();
@@ -93,11 +96,47 @@ public class Main {
 							in_userMnu=false;
 							
 						}
-						if(t_opt==1) 
+						else if(t_opt==3)
+						{
+							if(user.getPassword().equals("rejected"))
+							{
+								System.out.println("Sorry your Application has been rejected!");
+							}
+							else {
+								if(user.isApplied()){
+									CustomersImp check=new CustomersImp();
+									List<Customer> check1=new ArrayList<>();
+									check1=check.getAllCustomer();
+									for(Customer c:check1) {
+										if(c.getUserName().equals(user.getUsername())) {
+											if(c.getPassword().equals(user.getPassword())) {
+												System.out.println("Congradulations you have been approved!");
+												System.out.println("please user Customer login option to view your account");
+											}
+										}
+									}
+									
+									System.out.println("Your Application has already been sent and pending !");
+							}
+						}
+						}
+						else if(t_opt==1) 
 						{
 							if(user.isApplied()){
-								System.out.println("Your Application has already been sent!");
-								//in_userMnu=false;
+								CustomersImp check=new CustomersImp();
+								List<Customer> check1=new ArrayList<>();
+								check1=check.getAllCustomer();
+								for(Customer c:check1) {
+									if(c.getUserName().equals(user.getUsername())) {
+										if(c.getPassword().equals(user.getPassword())) {
+											System.out.println("Congradulations you have been approved!");
+											System.out.println("please user Customer login option to view your account");
+										}
+									}
+								}
+								
+								System.out.println("Your Application has already been sent and pending !");
+								
 							}
 							else {
 								last.apply(user);
@@ -134,11 +173,16 @@ public class Main {
 					System.out.println("2.Approve Applications");
 					System.out.println("3.Cancell Accounts");
 					System.out.println("4.Exit Portal");
+					System.out.println("5.Deny Applications");
+					System.out.println("6.Aprove/Deny Joint Applications");
 					Scanner scanner=new Scanner(System.in);
 					int temp=0;
 							while(temp==0) {
 								try{
 									temp=scanner.nextInt();
+									if(temp<0||temp>6) {
+										temp=0;
+									}
 									}catch(Exception e) {
 										System.out.print("Wrong input");
 										scanner.next();
@@ -146,6 +190,87 @@ public class Main {
 								}
 					if(temp==4) {
 						random=false;
+					}
+					else if(temp==6){
+						CustomersImp cuzin=new CustomersImp();
+						List<Customer>cuz=new ArrayList<>();
+						cuz=cuzin.getAll_JApps();
+						System.out.println(cuz.toString());
+						System.out.println("Please enter account number you would approve/deny or 0 to exit");
+						Scanner accPicker=new Scanner(System.in);
+						int accNumber=-111;
+						while(accNumber==-111){
+							try {
+								accNumber=accPicker.nextInt();
+							}catch(Exception e) {
+								System.out.println("Invalid Entry!");
+								accPicker.next();
+							}
+							
+						}
+						List<Customer> j_account=new ArrayList<>();
+						List<Customer> b_customer=new ArrayList<>();
+					
+						Customer ind=new Customer();
+						for(Customer c :  cuz) {
+							if(c.getA_number()==accNumber && c.isApproved()==false) {
+								j_account.add(c);
+								System.out.println(c);
+								ind=c;
+								
+							}
+							
+						}
+						b_customer=cuzin.getAllCustomer();
+						if(ind.getPassword()==null){
+							System.out.println("Looks like there are no Applications!");	
+						}
+						else {
+							System.out.println("1.Approve");
+							System.out.println("2.Deny");
+							int chozen=-111;
+							while(chozen==-111) {
+								try {
+								chozen=accPicker.nextInt();
+								if(chozen<0||chozen>2){
+									chozen=-111;
+								}
+								}catch(Exception e) {
+									System.out.println("Invalid Entry!");
+									accPicker.next();
+								}
+								
+								
+							}
+							boolean dre=false;
+							if(chozen==1) {
+								for(Customer jacc:j_account) {
+									jacc.setApproved(true);
+									cuzin.jApproval(jacc);
+									for(Customer c:b_customer) {
+										if(c.getUserName().equals(jacc.getUserName())){
+											dre=true;
+											break;
+										}
+										else {
+											dre=false;
+										}
+									}
+									if(dre==false)
+									{
+										cuzin.saveApplication(jacc);
+									}
+									
+								}
+								
+								
+							}
+							
+								
+							
+						}
+						
+						
 					}
 					else if(temp==2) {
 						CustomerImp customerImp=new CustomerImp();
@@ -163,7 +288,6 @@ public class Main {
 						}
 						System.out.println(a_apps.toString());
 						System.out.print("Please Enter Id of applicant you would like to except or Press 1 to exit: ");
-						System.out.println("1.Exit");
 						
 						Scanner ssc=new Scanner(System.in);
 						int ip=0;
@@ -230,9 +354,8 @@ public class Main {
 							customa.setEmployeid(employee.getEmployeeid());
 							customa.setA_number(a_number);
 							customersImp.saveApplication(customa);
-							customerImp.deleteApp(application);
-							RejectedApps rejectedapps=new RejectedApps();
-							rejectedapps.saveApplication(application);
+							//customerImp.deleteApp(application);
+							
 							
 							
 						}
@@ -251,6 +374,57 @@ public class Main {
 						
 						
 					}
+					else if(temp==5){
+						CustomerImp customerImp=new CustomerImp();
+						List<Applications> appps=new ArrayList<>();
+						CustomerImp customer=new CustomerImp();
+						appps=customer.getAllApplications();
+						List<Applications> a_apps=new ArrayList<>();
+						for(Applications p:appps)
+						{
+							if(p.isApplied()==true){
+								a_apps.add(p);
+								
+							}
+							
+						}
+						System.out.println(a_apps.toString());
+						System.out.print("Please Enter Id of applicant you would like to except or Press 1 to exit: ");
+						
+						Scanner ssc=new Scanner(System.in);
+						int ip=0;
+						while(ip==0)
+						{
+							try{
+								ip=ssc.nextInt();
+							}catch(Exception e) {
+								System.out.println("Oops it looks like this account does not exist!");
+								ssc.next();
+							}
+						}
+						Applications application=new Applications();
+						boolean exists=false;
+						for(Applications ap : appps) {
+							if(ap.getId()==ip) {
+								exists=true;
+								application=ap;
+							}
+						}
+						if(exists==true) {
+						RejectedApps rejectedApps=new RejectedApps();
+						try {
+							rejectedApps.saveApplication(application);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						customer.deleteApp(application);
+					}
+						else {
+							
+								System.out.println("Sorry application does not exist");
+							}
+						}
 					else if(temp==1) {
 						
 						CustomersImp customersImps=new CustomersImp();
@@ -350,21 +524,14 @@ public class Main {
 				System.out.println("5.Checking withdrawl");
 				System.out.println("6.Savings withdrawl");
 				System.out.println("7.Transfer");
+				System.out.println("8.Apply for joint account");
 				
-				
-					
-//					System.out.println("Hello "+log.getUserName());
-//					System.out.println("1.Check checking Balance");
-//					System.out.println("2.Check savings Balance");
-//					System.out.println("3.Withdrawl money");
-//					System.out.println("4.Deposit");
-//					System.out.println("5.Transfers");
 					Scanner c_choice=new Scanner(System.in);
 					int cc_choice=-111;
 					while(cc_choice==-111){
 						try {
 						cc_choice=c_choice.nextInt();
-						if(cc_choice<0||cc_choice>7){
+						if(cc_choice<0||cc_choice>8){
 							cc_choice=-111;
 							System.out.println("Input not valid");
 						}
@@ -383,6 +550,70 @@ public class Main {
 				}
 				else if(cc_choice==0){
 					break;
+				}
+				else if(cc_choice==8){
+					System.out.println("Please Enter Credentials of Second account holder");
+					Customer s_customer=new Customer();
+					Scanner creds=new Scanner(System.in);
+					String firstname=null;
+					String lastname=null;
+					String password=null;
+					String username=null;
+					String password1=null;
+					System.out.println("Please Enter firstname: ");
+					while(firstname==null){
+						try {
+							firstname=creds.nextLine();
+							s_customer.setFirstName(firstname);
+						}catch(Exception e) {
+							creds.next();
+							
+						}
+						
+					}
+					System.out.println("Please Enter lastname: ");
+					while(lastname==null){
+						try {
+							lastname=creds.nextLine();
+							s_customer.setLastName(lastname);
+						}catch(Exception e) {
+							creds.next();
+							
+						}
+						
+					}
+					System.out.println("Please Enter username: ");
+					while(username==null){
+						try {
+							username=creds.nextLine();
+							s_customer.setUserName(username);;
+						}catch(Exception e) {
+							creds.next();
+							
+						}
+						
+					}
+					System.out.println("Please Enter password: ");
+					while(password1==null){
+						try {
+							password1=creds.nextLine();
+							s_customer.setPassword(password1);
+						}catch(Exception e) {
+							creds.next();
+							
+						}
+						
+					}
+					s_customer.setA_number(log.getA_number());
+					s_customer.setC_balance(0.0);
+					s_customer.setS_balance(0.0);
+					s_customer.setApproved(false);
+					log.setApproved(false);
+					CustomersImp ples=new CustomersImp();
+					ples.save_JApplication(s_customer);
+					ples.saveApplication(s_customer);
+					ples.save_JApplication(log);
+					
 				}
 				else if(cc_choice==3){
 					System.out.println("How much would like to deposit?");
@@ -410,18 +641,134 @@ public class Main {
 					System.out.println("Your savings account balance: "+log.getS_balance());
 				}
 				else if(cc_choice==7) {
-					System.out.println("Would you like to transfer from your checking or savings account?");
+					System.out.println("Would you like to transfer from your\n1.checking account\n2.savings account\npress 0 to exit");
+					Scanner scanner=new Scanner(System.in);
+					int trans=-111;
+					while(trans==-111){
+						try {
+							trans=scanner.nextInt();
+							if(trans<0||trans>2){
+								trans=-111;
+								System.out.println("invalid input!");
+								
+							}
+						}catch(Exception e) {
+							System.out.println("invalid input!");
+							scanner.next();
+						}
+					}
+					if(trans==1){
+						double amount=-111;
+						System.out.println("Please enter username of the account you would like to send funds to or 0 to exit a: ");
+						Scanner o_c= new Scanner(System.in);
+						CustomersImp customers=new CustomersImp();
+						List<Customer> customerrs=new ArrayList<>();
+						customerrs=customers.getAllCustomer();
+						String r_an=null;
+						while(r_an==null){
+							try {
+								r_an=o_c.nextLine();
+								
+							}catch(Exception e) {
+								o_c.next();
+								System.out.println("Invalid Input!");
+							}
+						}
+						boolean user=false;
+						Customer t_trans=new Customer();
+						for(Customer c:customerrs) {
+							if(c.getUserName().equals(r_an)) {
+								t_trans=c;
+								System.out.println("How much would like to transfer? 0 to exit");
+								while(amount==-111) {
+								try{
+									amount=o_c.nextDouble();
+									if(amount<0) {
+										amount=-111;
+										System.out.println("Operation invalid");
+									}
+									}catch(Exception e) {
+										System.out.println("Operation invalid");
+										o_c.next();
+									}
+								
+								}
+								if(amount<log.getC_balance()) {
+								System.out.println("Transfer to "+ t_trans.getUserName()+" Was successful!");
+								customers.transferD(amount, log, t_trans);
+								log.setC_balance(log.getC_balance()-amount);
+								user=true;
+								}
+								else {
+									System.out.println("Not enough funds!");
+								}
+							}
+						}
+						
+					}
+					else if(trans==2){
+						double amount=-111;
+						System.out.println("Please enter username of the account you would like to send funds to or 0 to exit a: ");
+						Scanner o_c= new Scanner(System.in);
+						CustomersImp customers=new CustomersImp();
+						List<Customer> customerrs=new ArrayList<>();
+						customerrs=customers.getAllCustomer();
+						String r_an=null;
+						while(r_an==null){
+							try {
+								r_an=o_c.nextLine();
+								
+							}catch(Exception e) {
+								o_c.next();
+								System.out.println("Invalid Input!");
+							}
+						}
+						boolean user=false;
+						Customer t_trans=new Customer();
+						for(Customer c:customerrs) {
+							if(c.getUserName().equals(r_an)) {
+								t_trans=c;
+								System.out.println("How much would like to transfer? 0 to exit");
+								while(amount==-111) {
+								try{
+									amount=o_c.nextDouble();
+									if(amount<0) {
+										amount=-111;
+										System.out.println("Operation invalid");
+									}
+									}catch(Exception e) {
+										System.out.println("Operation invalid");
+										o_c.next();
+									}
+								
+								}
+								
+								if(amount<log.getC_balance()) {
+								System.out.println("Transfer to "+ t_trans.getUserName()+" Was successful!");
+								customers.transferS(amount, log, t_trans);
+								log.setS_balance(log.getS_balance()-amount);
+								user=true;
+								}
+								else {
+									System.out.println("Not enough Funds!");
+								}
+							}
+						}
+						
+						
+					}
+					
 					
 				}
 				else if(cc_choice==5){
-					System.out.println("How much would like to withdrawl?: ");
-					double amount=0;
-					while(amount==0) {
+					System.out.println("How much would like to withdrawl?: 0 to exit ");
+					double amount=-111;
+					while(amount==-111) {
 						try {
 					amount=c_choice.nextDouble();
 					if(amount<0){
 						System.out.println("invalid operation!");
-						amount=0;
+						amount=-111;
 					}
 						}catch(Exception e){
 							c_choice.next();
@@ -439,6 +786,54 @@ public class Main {
 					}
 					
 				}
+				else if(cc_choice==6) {
+					System.out.println("How much would like to withdrawl?: 0 to exit ");
+					double amount=-111;
+					while(amount==-111) {
+						try {
+					amount=c_choice.nextDouble();
+					if(amount<0){
+						System.out.println("invalid operation!");
+						amount=-111;
+					}
+						}catch(Exception e){
+							c_choice.next();
+							System.out.println("invalid operation!");
+							
+						}
+					}
+					cuz.widthrawlSavings(amount, log);
+					if(amount>log.getS_balance()) {
+						System.out.println("insufficient funds for withdrawl");
+					}
+					else {
+					log.setS_balance(log.getS_balance()-amount);
+					System.out.println("Here is your new balance: "+log.getS_balance());
+					}
+					
+				}
+				else if(cc_choice==4) {
+					System.out.println("How much would like to deposit?");
+					double amount=0;
+					while(amount==0) {
+						try {
+					amount=c_choice.nextDouble();
+					if(amount<0){
+						System.out.println("invalid operation!");
+						amount=0;
+					}
+						}catch(Exception e){
+							c_choice.next();
+							System.out.println("invalid operation!");
+							
+						}
+					}
+					cuz.depositSavings(amount, log);
+					log.setS_balance(log.getS_balance()+amount);
+					System.out.println("Here is your new balance: "+log.getS_balance());
+					
+				}
+				
 					
 					
 					
@@ -552,6 +947,8 @@ public static String RegisterMenu() {
     		   
     	   }catch(Exception e) {
     		   System.out.println("Wrong Input!");
+    		   input.next();
+    		   credit_score=0;
     	   }
        }
        
@@ -625,6 +1022,7 @@ public static Employee EmpLogginMenu() {
 			password=sc.nextLine();
 		}catch(Exception e){
 			System.out.print("Wrong input");
+			sc.next();
 		}
 		
 		
@@ -722,6 +1120,16 @@ static Applications userlogMenu() {
 			System.out.println("Wrong input!");
 			sc.next();
 			
+		}
+	}
+	RejectedApps rejectedApps=new RejectedApps();
+	List<Applications> r_apps=rejectedApps.getAllApplications();
+	for(Applications ape:r_apps){
+		if(ape.getUsername().equals(username)) {
+			if(ape.getPassword().equals(password)){
+				ape.setPassword("rejected");
+				return ape;
+			}
 		}
 	}
 	CustomerImp customerImp=new CustomerImp();

@@ -89,7 +89,7 @@ public class RejectedApps implements RejectedClassInterface {
 			// then update didn't occur, throw an exception
 			throw new Exception("Insert Customer failed: ");
 		}
-
+		connection.close();
 	}
 	public void deleteApp(Applications app) {
 		Connection connection=null;
@@ -108,6 +108,12 @@ public class RejectedApps implements RejectedClassInterface {
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
+        try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 }
 }

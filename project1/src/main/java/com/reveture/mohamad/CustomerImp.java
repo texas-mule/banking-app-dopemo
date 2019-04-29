@@ -155,7 +155,53 @@ public class CustomerImp implements PostgreImp{
 
 
 
-	
+	public List<Admin> getAllAdmins() {
+		List<Admin> admins = new ArrayList<>();
+		Connection connection = null;
+		Statement stmt = null;
+
+		try {
+			connection = Postgres.getConnection();
+
+			stmt = connection.createStatement();
+
+			ResultSet rs = stmt.executeQuery( "SELECT * FROM \"Admin\";" );
+	         while ( rs.next() ) {
+	             
+	             Admin admin= new Admin();
+	             admin.setId(rs.getInt("Id"));
+	             
+	            admin.setUserName(rs.getString("username"));
+	             admin.setPassword(rs.getString("Password"));
+	             
+	             admins.add(admin);
+	             
+	            
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (stmt != null) {
+					stmt.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return admins;
+	}
+
 
 	
 

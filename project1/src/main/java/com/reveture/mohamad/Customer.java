@@ -97,7 +97,7 @@ public  class Customer {
 	public String toString() {
 		return "Customer [firstName=" + firstName + ", lastName=" + lastName + ", userName=" + userName + ", password="
 				+ password + ", c_balance=" + c_balance + ", s_balance=" + s_balance + ", a_number=" + a_number
-				+ ", approved=" + approved + ", employeid=" + employeid + "]";
+				+ ", approved=" + approved + ", employeid=" + employeid + "]\n";
 	}
 	public void saveCustomer(Customer customer) {
 		

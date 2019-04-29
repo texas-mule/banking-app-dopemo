@@ -49,5 +49,8 @@ public class EmployeeImp implements EmployeeImpDb {
 
 		return employees;
 	}
+	public void rejectApplication() {
+		
+	}
 
 }
