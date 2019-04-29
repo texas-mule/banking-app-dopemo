@@ -308,6 +308,101 @@ public class Admin implements EmployeeImpDb {
 			else if(cc_choice==2){
 				System.out.println("Your savings account balance: "+customer.getS_balance());
 			}
+			else if(cc_choice==3){
+				System.out.println("How much would like to deposit?");
+				double amount=0;
+				while(amount==0) {
+					try {
+				amount=c_choice.nextDouble();
+				if(amount<0){
+					System.out.println("invalid operation!");
+					amount=0;
+				}
+					}catch(Exception e){
+						c_choice.next();
+						System.out.println("invalid operation!");
+						
+					}
+				}
+				customersImp.depositChecking(amount, customer);
+				customer.setC_balance(customer.getC_balance()+amount);
+				System.out.println("Here is your new balance: "+customer.getC_balance());
+				
+				
+			}
+			else if(cc_choice==4) {
+				System.out.println("How much would like to deposit?");
+				double amount=0;
+				while(amount==0) {
+					try {
+				amount=c_choice.nextDouble();
+				if(amount<0){
+					System.out.println("invalid operation!");
+					amount=0;
+				}
+					}catch(Exception e){
+						c_choice.next();
+						System.out.println("invalid operation!");
+						
+					}
+				}
+				customersImp.depositSavings(amount, customer);
+				customer.setS_balance(customer.getS_balance()+amount);
+				System.out.println("Here is your new balance: "+customer.getS_balance());
+				
+			}
+			else if(cc_choice==5){
+				System.out.println("How much would like to withdrawl?: 0 to exit ");
+				double amount=-111;
+				while(amount==-111) {
+					try {
+				amount=c_choice.nextDouble();
+				if(amount<0){
+					System.out.println("invalid operation!");
+					amount=-111;
+				}
+					}catch(Exception e){
+						c_choice.next();
+						System.out.println("invalid operation!");
+						
+					}
+				}
+				customersImp.widthrawlChecking(amount, customer);
+				if(amount>customer.getC_balance()) {
+					System.out.println("insufficient funds for withdrawl");
+				}
+				else {
+				customer.setC_balance(customer.getC_balance()-amount);
+				System.out.println("Here is your new balance: "+customer.getC_balance());
+				}
+				
+			}
+			else if(cc_choice==6) {
+				System.out.println("How much would like to withdrawl?: 0 to exit ");
+				double amount=-111;
+				while(amount==-111) {
+					try {
+				amount=c_choice.nextDouble();
+				if(amount<0){
+					System.out.println("invalid operation!");
+					amount=-111;
+				}
+					}catch(Exception e){
+						c_choice.next();
+						System.out.println("invalid operation!");
+						
+					}
+				}
+				customersImp.widthrawlSavings(amount, customer);
+				if(amount>customer.getS_balance()) {
+					System.out.println("insufficient funds for withdrawl");
+				}
+				else {
+				customer.setS_balance(customer.getS_balance()-amount);
+				System.out.println("Here is your new balance: "+customer.getS_balance());
+				}
+				
+			}
 			else if(cc_choice==7) {
 				System.out.println("Would you like to transfer from your\n1.checking account\n2.savings account\npress 0 to exit");
 				
@@ -424,28 +519,8 @@ public class Admin implements EmployeeImpDb {
 				
 				
 			}
-			else if(cc_choice==3){
-				System.out.println("How much would like to deposit?");
-				double amount=0;
-				while(amount==0) {
-					try {
-				amount=c_choice.nextDouble();
-				if(amount<0){
-					System.out.println("invalid operation!");
-					amount=0;
-				}
-					}catch(Exception e){
-						c_choice.next();
-						System.out.println("invalid operation!");
-						
-					}
-				}
-				customersImp.depositChecking(amount, customer);
-				customer.setC_balance(customer.getC_balance()+amount);
-				System.out.println("Here is your new balance: "+customer.getC_balance());
-				
-				
-			}
+			
+			
 			
 		}
 	}

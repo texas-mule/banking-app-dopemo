@@ -90,6 +90,7 @@ public class Main {
 							t_opt=opt.nextInt();
 							}catch(Exception e){
 								opt.next();
+								
 							}
 						}
 						if(t_opt==2){
@@ -960,14 +961,25 @@ public static String RegisterMenu() {
 	}
 public static int newUserMenu(Applications app) {
 	
-	int selection;
+	int selection=-111;
 	System.out.println("Welcome "+app.getUsername());
     Scanner input = new Scanner(System.in);
+   
     System.out.println("1.Apply for Account");
     System.out.println("2.Back to Main Menu");
 	
-	
+	while(selection==-111) {
+		try {
     selection = input.nextInt();
+    if(selection<0||selection>2){
+    	System.out.println("Invalid entry!");
+    }
+    
+		}catch(Exception e) {
+			System.out.println("Invalid entry!");
+			input.next();
+		}
+	}
     return selection;  
 }
 public static int addApplication(Applications app){
