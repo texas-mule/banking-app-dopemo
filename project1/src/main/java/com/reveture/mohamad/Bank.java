@@ -4,7 +4,8 @@ import java.util.ArrayList;
 public class Bank {
 	public ArrayList<Admin> admins=new ArrayList<Admin>();
 	public ArrayList<Employee> employees= new ArrayList<Employee>();
-	public Bank() {
+	public Bank() 
+	{
 		this.employees.add(new Employee("mohamad","password"));
 		this.employees.add(new Employee("jeez","password1"));
 	}

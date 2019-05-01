@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Scanner;
+
+import com.revature.mohamad.project01.Admin;
+import com.revature.mohamad.project01.Applications;
 public class Main {
 
 	public static void main(String[] args) {
@@ -23,7 +26,7 @@ public class Main {
 		boolean flag=true;
 		Applications dude=new Applications();
 		while(flag==true) {
-		System.out.println(dude.isApplied());
+		
 			int input=menu();
 			if(input==1) {
 				String appInfo=RegisterMenu();
@@ -45,18 +48,31 @@ public class Main {
 
 				boolean in_userMenu=true;
 				int temp1=addApplication(app);
-				if(temp1!=1) {
-					System.out.println("Sorry User Already exists!");
+				if(temp1==1) {
+					System.out.println("Sorry User Already exists");
+					System.out.println("please make new user name or use the User login menu!");
 				
 				}
 				else {
 					while(in_userMenu) {
+					CustomerImp las=new CustomerImp();
 					int so=newUserMenu(app);
+					System.out.println(app.isApplied());
 					if(so==1) {
 						CustomerImp cst=new CustomerImp();
-						cst.apply(app);
-						System.out.println("Application has been sent!");
-						in_userMenu=false;
+						if(app.isApplied()) {
+							
+							System.out.println("Application is sent and pending!");
+						}
+						else {
+							las.apply(app);
+							System.out.println("Application has been sent!");
+							
+							in_userMenu=false;
+							
+						}
+						
+						
 					}
 					else if(so==2) {
 						in_userMenu=false;
@@ -221,6 +237,9 @@ public class Main {
 								
 							}
 							
+						}
+						if(accNumber==0){
+							break;
 						}
 						b_customer=cuzin.getAllCustomer();
 						if(ind.getPassword()==null){
@@ -744,7 +763,7 @@ public class Main {
 								
 								}
 								
-								if(amount<log.getC_balance()) {
+								if(amount<log.getS_balance()) {
 								System.out.println("Transfer to "+ t_trans.getUserName()+" Was successful!");
 								customers.transferS(amount, log, t_trans);
 								log.setS_balance(log.getS_balance()-amount);
@@ -1008,11 +1027,7 @@ public static int addApplication(Applications app){
 		e.printStackTrace();
 	}
 }
-	else if(exists==true) {
-		System.out.println("Start over!\nUser Already exists\n");
-		return 2;
-	}
-	return 1;
+	return 2;
 }
 public static Employee EmpLogginMenu() {
 	boolean flag=false;

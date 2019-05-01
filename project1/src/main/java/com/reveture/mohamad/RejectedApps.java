@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.revature.mohamad.project01.Applications;
+
 public class RejectedApps implements RejectedClassInterface {
 	public List<Applications> getAllApplications() {
 		List<Applications> apps = new ArrayList<>();

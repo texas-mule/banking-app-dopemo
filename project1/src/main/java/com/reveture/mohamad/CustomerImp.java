@@ -2,6 +2,9 @@ package com.reveture.mohamad;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.revature.mohamad.project01.Admin;
+import com.revature.mohamad.project01.Applications;
 public class CustomerImp implements PostgreImp{
 	public List<Applications> getAllApplications() {
 		List<Applications> apps = new ArrayList<>();

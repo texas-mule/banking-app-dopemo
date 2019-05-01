@@ -1,8 +1,9 @@
 package com.reveture.mohamad;
 import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Scanner;
 
+import com.revature.mohamad.project01.Applications;
 public class Admin implements EmployeeImpDb {
 	private int id;
 	private String userName;
